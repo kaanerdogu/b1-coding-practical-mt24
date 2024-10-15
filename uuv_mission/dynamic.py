@@ -10,7 +10,7 @@ class Submarine:
         self.mass = 1
         self.drag = 0.1
         self.actuator_gain = 1
-
+        
         self.dt = 1 # Time step for discrete time simulation
 
         self.pos_x = 0
