@@ -76,8 +76,11 @@ class Mission:
 
     @classmethod
     def from_csv(cls, file_name: str):
-        mission_data_frame = pd.readcsv(file_name)
-        return cls(mission_data_frame['reference'], mission_data_frame['cave_height'], mission_data_frame['cave_depth'])
+        mission_data_frame = pd.read_csv(file_name)
+        reference = mission_data_frame['reference'].values
+        cave_height = mission_data_frame['cave_height'].values
+        cave_depth = mission_data_frame['cave_depth'].values
+        return cls(reference, cave_height, cave_depth)
 
 
 class ClosedLoop:
@@ -98,7 +101,7 @@ class ClosedLoop:
         for t in range(T):
             positions[t] = self.plant.get_position()
             observation_t = self.plant.get_depth()
-            # Call your controller here
+            self.controller()
             self.plant.transition(actions[t], disturbances[t])
 
         return Trajectory(positions)
@@ -106,3 +109,4 @@ class ClosedLoop:
     def simulate_with_random_disturbances(self, mission: Mission, variance: float = 0.5) -> Trajectory:
         disturbances = np.random.normal(0, variance, len(mission.reference))
         return self.simulate(mission, disturbances)
+
